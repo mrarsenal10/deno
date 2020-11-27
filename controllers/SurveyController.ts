@@ -6,7 +6,9 @@ export default class SurveyController {
         // const { value } = ctx.request.body({ type: "json" });
         // const { userId } = await value;
 
-        ctx.response.body = await Survey.findByUser("1");
+        const surveys = await Survey.findByUser("1");
+        console.log(surveys);
+        ctx.response.body = surveys;
     }
 
     public static async getSingle(ctx: RouterContext) {

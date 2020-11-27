@@ -1,6 +1,7 @@
 import { surveysCollection } from '../mongo.ts';
+import BaseModel from './BaseModel.ts';
 
-export default class Survey {
+export default class Survey extends BaseModel {
     public id: string = '';
 
     constructor(
@@ -8,14 +9,16 @@ export default class Survey {
         public name: string = '',
         public description: string = '') {
 
+        super();
+
         this.userId = userId;
         this.name = name;
         this.description = description;
     }
 
-    static async findByUser(userId: string) {
+    static async findByUser(userId: string): Promise<Survey[]> {
         const surveys = await surveysCollection.find({ userId });
-        return surveys.map((survey: any) => this.prepare(survey));
+        return surveys.map((survey: any) => BaseModel.prepare(survey));
     }
 
     public async save() {
@@ -27,11 +30,5 @@ export default class Survey {
         } catch (error) {
             throw new Error('error');
         }
-    }
-
-    private static prepare(data: any) {
-        data.id = data._id.$oid;
-        delete data._id;
-        return data;
     }
 }
