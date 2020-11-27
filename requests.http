@@ -1,0 +1,37 @@
+
+### login
+POST http://localhost:8000/api/login
+content-type: application/json
+
+{
+    "email": "test@test1221.com",
+    "password": "password"
+}
+
+### register
+POST http://localhost:8000/api/register
+content-type: application/json
+
+{
+    "name": "test",
+    "email": "test2@test.com",
+    "password": "password"
+}
+
+### get all survey
+GET http://localhost:8000/api/survey/
+content-type: application/json
+
+### get single survey
+GET http://localhost:8000/api/survey/1
+content-type: application/json
+
+### create a new survey
+POST http://localhost:8000/api/survey
+content-type: application/json
+
+{
+    "name": "test",
+    "description": "test@test1221.com",
+    "userId": "1"
+}
