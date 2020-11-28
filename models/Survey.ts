@@ -1,34 +1,43 @@
-import { surveysCollection } from '../mongo.ts';
-import BaseModel from './BaseModel.ts';
+import { surveysCollection } from "../mongo.ts";
+import BaseModel from "./BaseModel.ts";
 
 export default class Survey extends BaseModel {
-    public id: string = '';
+  public id: string = "";
 
-    constructor(
-        public userId: string = '',
-        public name: string = '',
-        public description: string = '') {
+  constructor(
+    public userId: string = "",
+    public name: string = "",
+    public description: string = "",
+  ) {
+    super();
 
-        super();
+    this.userId = userId;
+    this.name = name;
+    this.description = description;
+  }
 
-        this.userId = userId;
-        this.name = name;
-        this.description = description;
+  static async findByUser(userId: string): Promise<Survey[]> {
+    const surveys = await surveysCollection.find({ userId });
+    return surveys.map((survey: any) => BaseModel.prepare(survey));
+  }
+
+  public async save() {
+    try {
+      delete this.id;
+      const { $oid } = await surveysCollection.insertOne(this);
+      this.id = $oid;
+      return this;
+    } catch (error) {
+      throw new Error("error");
     }
+  }
 
-    static async findByUser(userId: string): Promise<Survey[]> {
-        const surveys = await surveysCollection.find({ userId });
-        return surveys.map((survey: any) => BaseModel.prepare(survey));
+  public static async findSurvey(id: string) {
+    try {
+      const survey = await surveysCollection.findOne({ _id: { $oid: id } });
+      return BaseModel.prepare(survey);
+    } catch (error) {
+      throw new Error(error.message);
     }
-
-    public async save() {
-        try {
-            delete this.id;
-            const { $oid } = await surveysCollection.insertOne(this);
-            this.id = $oid;
-            return this;
-        } catch (error) {
-            throw new Error('error');
-        }
-    }
+  }
 }

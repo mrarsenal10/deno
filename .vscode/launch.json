@@ -8,15 +8,12 @@
             "name": "Launch Deno",
             "request": "launch",
             "type": "pwa-node",
-            "program": "main.ts",
             "cwd": "${workspaceFolder}",
             "runtimeExecutable": "deno",
-            "runtimeArgs": [
-                "run",
-                "--inspect-brk",
-                "--allow-all"
-            ],
-            "attachSimplePort": 9229
+            "runtimeArgs": ["run", "--inspect-brk", "-A", "--unstable", "server.ts"],
+            "attachSimplePort": 9229,
+            "outputCapture": "std",
+            "console": "integratedTerminal"
         }
     ]
 }
