@@ -1,8 +1,12 @@
 import { RouterContext } from "../deps.ts";
 import Survey from "../models/Survey.ts";
+import SurveyBaseController from "./SurveyBaseController.ts";
+class SurveyController extends SurveyBaseController {
+  constructor() {
+    super();
+  }
 
-export default class SurveyController {
-  public static async getAllForUser(ctx: RouterContext) {
+  public async getAllForUser(ctx: RouterContext) {
     // const { value } = ctx.request.body({ type: "json" });
     // const { userId } = await value;
 
@@ -10,7 +14,7 @@ export default class SurveyController {
     ctx.response.body = surveys;
   }
 
-  public static async getSingle(ctx: RouterContext) {
+  public async getSingle(ctx: RouterContext) {
     try {
       const id = ctx.params.id!;
       const survey = await Survey.findSurvey(id);
@@ -25,7 +29,7 @@ export default class SurveyController {
     }
   }
 
-  public static async create(ctx: RouterContext) {
+  public async create(ctx: RouterContext) {
     const { value } = ctx.request.body({ type: "json" });
     const { userId, name, description } = await value;
 
@@ -36,9 +40,56 @@ export default class SurveyController {
     ctx.response.body = newSurvey;
   }
 
-  public static async update(ctx: RouterContext) {
+  public async update(ctx: RouterContext) {
+    try {
+
+      const id = ctx.params.id!;
+      const survey = await this.findSurveyOrFail(id, ctx);
+
+      if (survey) {
+        const { value } = ctx.request.body({ type: "json" });
+        const { userId, name, description } = await value;
+
+        await survey.update(name, description);
+
+        ctx.response.status = 200;
+        ctx.response.body = survey;
+      }
+
+    } catch (error) {
+      ctx.response.status = 500;
+      ctx.response.body = {
+        message: error.message
+      };
+    }
   }
 
-  public static async delete(ctx: RouterContext) {
+  public async delete(ctx: RouterContext) {
+    try {
+        const id = ctx.params.id!;
+        const survey = await this.findSurveyOrFail(id, ctx);
+        if (!survey) {
+          ctx.response.status = 400;
+          ctx.response.body = {
+            message: 'Survey not found'
+          };
+          return;
+        }
+
+        await survey.delete();
+        ctx.response.status = 204;
+        ctx.response.body = {
+          message: 'Deleted'
+        };
+
+    } catch (error) {
+      ctx.response.status = 500;
+      ctx.response.body = {
+        message: error.message
+      };
+    }
   }
 }
+
+const surveyController = new SurveyController();
+export default surveyController;

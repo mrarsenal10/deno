@@ -1,5 +1,6 @@
 import { surveysCollection } from "../mongo.ts";
 import BaseModel from "./BaseModel.ts";
+import { ObjectId } from "../deps.ts";
 
 export default class Survey extends BaseModel {
   public id: string = "";
@@ -32,12 +33,46 @@ export default class Survey extends BaseModel {
     }
   }
 
-  public static async findSurvey(id: string) {
+  public static async findSurvey(id: string): Promise<Survey | null> {
     try {
-      const survey = await surveysCollection.findOne({ _id: { $oid: id } });
-      return BaseModel.prepare(survey);
+
+      const survey = await surveysCollection.findOne({ _id: ObjectId(id) });
+      if (! survey) {
+        return null;
+      }
+      return Survey.prepare(survey);
+
     } catch (error) {
       throw new Error(error.message);
     }
+  }
+
+  public async update(name: string, description: string) {
+      try {
+
+        await surveysCollection.updateOne({ _id: ObjectId(this.id) }, { name, description });
+        this.name = name;
+        this.description = description;
+
+        return this;
+
+      } catch (error) {
+          throw new Error(error);
+      }
+  }
+
+  public async delete() {
+    try {
+      return await surveysCollection.deleteOne({ _id: ObjectId(this.id) });
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  protected static prepare(data: any): Survey {
+    data = BaseModel.prepare(data);
+    const survey = new Survey(data.userId, data.name, data.description);
+    survey.id = data.id;
+    return survey;
   }
 }

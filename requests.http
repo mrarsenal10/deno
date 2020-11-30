@@ -35,3 +35,16 @@ content-type: application/json
     "description": "test@test1221.com",
     "userId": "1"
 }
+
+### update a survey
+PUT http://localhost:8000/api/survey/5fc08a8b00ee319b006bb825
+content-type: application/json
+
+{
+    "name": "test",
+    "description": "aaaa11aaaaa"
+}
+
+### delete a survey
+DELETE http://localhost:8000/api/survey/5fc08a8b00ee319b006bb825
+content-type: application/json
