@@ -51,7 +51,7 @@ class AuthController {
 
         const payload: Payload = {
           iss: user.email,
-          exp: getNumericDate(60),
+          exp: getNumericDate(3600),
         };
 
         ctx.response.body = {

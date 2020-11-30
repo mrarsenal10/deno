@@ -19,8 +19,11 @@ content-type: application/json
 }
 
 ### get all survey
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0QHRlc3QuY29tIiwiZXhwIjoxNjA2NzM0NjkyfQ.iA0Dh7u8Nl14JKhSTFIZrFuZrMP1WgNwX-p1Tq0YhBE
+
 GET http://localhost:8000/api/survey/
 content-type: application/json
+Authorization: Bearer {{token}}
 
 ### get single survey
 GET http://localhost:8000/api/survey/5fc08a8b00ee319b006bb825
@@ -29,6 +32,7 @@ content-type: application/json
 ### create a new survey
 POST http://localhost:8000/api/survey
 content-type: application/json
+Authorization: Bearer {{token}}
 
 {
     "name": "test",

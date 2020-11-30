@@ -31,9 +31,10 @@ class SurveyController extends SurveyBaseController {
 
   public async create(ctx: RouterContext) {
     const { value } = ctx.request.body({ type: "json" });
-    const { userId, name, description } = await value;
+    const { name, description } = await value;
+    const user = ctx.state.user;
 
-    const newSurvey = new Survey("1", name, description);
+    const newSurvey = new Survey(user.id, name, description);
     await newSurvey.save();
 
     ctx.response.status = 201;
