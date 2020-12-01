@@ -19,15 +19,16 @@ content-type: application/json
 }
 
 ### get all survey
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0QHRlc3QuY29tIiwiZXhwIjoxNjA2NzM0NjkyfQ.iA0Dh7u8Nl14JKhSTFIZrFuZrMP1WgNwX-p1Tq0YhBE
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0QHRlc3QuY29tIiwiZXhwIjoxNjA2Nzk4MjI4fQ.sCIFFHxSOcjLNRYGrZbv_LZNzl_cnDnMhODQ8WXc9bs
 
 GET http://localhost:8000/api/survey/
 content-type: application/json
 Authorization: Bearer {{token}}
 
 ### get single survey
-GET http://localhost:8000/api/survey/5fc08a8b00ee319b006bb825
+GET http://localhost:8000/api/survey/5fc5be4a00fcc2a600111c70
 content-type: application/json
+Authorization: Bearer {{token}}
 
 ### create a new survey
 POST http://localhost:8000/api/survey
@@ -43,6 +44,7 @@ Authorization: Bearer {{token}}
 ### update a survey
 PUT http://localhost:8000/api/survey/5fc08a8b00ee319b006bb825
 content-type: application/json
+Authorization: Bearer {{token}}
 
 {
     "name": "test",
@@ -52,3 +54,4 @@ content-type: application/json
 ### delete a survey
 DELETE http://localhost:8000/api/survey/5fc08a8b00ee319b006bb825
 content-type: application/json
+Authorization: Bearer {{token}}

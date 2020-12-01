@@ -9,10 +9,30 @@ router
   .post("/api/login", authController.login)
   .post("/api/register", authController.register)
   // survey
-  .get("/api/survey", authMiddleware, surveyController.getAllForUser)
-  .get("/api/survey/:id", authMiddleware, surveyController.getSingle)
-  .post("/api/survey", authMiddleware, surveyController.create)
-  .put("/api/survey/:id", authMiddleware, surveyController.update.bind(surveyController))
-  .delete("/api/survey/:id", authMiddleware, surveyController.delete.bind(surveyController));
+  .get(
+    "/api/survey",
+    authMiddleware,
+    surveyController.getAllForUser.bind(surveyController)
+  )
+  .get(
+    "/api/survey/:id",
+    authMiddleware,
+    surveyController.getSingle.bind(surveyController)
+  )
+  .post(
+    "/api/survey",
+    authMiddleware,
+    surveyController.create.bind(surveyController)
+  )
+  .put(
+    "/api/survey/:id",
+    authMiddleware,
+    surveyController.update.bind(surveyController)
+  )
+  .delete(
+    "/api/survey/:id",
+    authMiddleware,
+    surveyController.delete.bind(surveyController)
+  );
 
 export default router;

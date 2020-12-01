@@ -1,5 +1,6 @@
 import { RouterContext } from "../deps.ts";
 import Survey from "../models/Survey.ts";
+import User from "../models/User.ts";
 import SurveyBaseController from "./SurveyBaseController.ts";
 class SurveyController extends SurveyBaseController {
   constructor() {
@@ -9,18 +10,21 @@ class SurveyController extends SurveyBaseController {
   public async getAllForUser(ctx: RouterContext) {
     // const { value } = ctx.request.body({ type: "json" });
     // const { userId } = await value;
+    const user = ctx.state.user;
 
-    const surveys = await Survey.findByUser("1");
+    const surveys = await Survey.findByUser(user.id);
     ctx.response.body = surveys;
   }
 
   public async getSingle(ctx: RouterContext) {
     try {
       const id = ctx.params.id!;
-      const survey = await Survey.findSurvey(id);
+      const survey = await this.findSurveyOrFail(id, ctx);
 
-      ctx.response.status = 200;
-      ctx.response.body = survey;
+      if (survey) {
+        ctx.response.status = 200;
+        ctx.response.body = survey;
+      }
     } catch (error) {
       ctx.response.status = 500;
       ctx.response.body = {
@@ -32,7 +36,8 @@ class SurveyController extends SurveyBaseController {
   public async create(ctx: RouterContext) {
     const { value } = ctx.request.body({ type: "json" });
     const { name, description } = await value;
-    const user = ctx.state.user;
+
+    const user = ctx.state.user as User;
 
     const newSurvey = new Survey(user.id, name, description);
     await newSurvey.save();
@@ -43,7 +48,6 @@ class SurveyController extends SurveyBaseController {
 
   public async update(ctx: RouterContext) {
     try {
-
       const id = ctx.params.id!;
       const survey = await this.findSurveyOrFail(id, ctx);
 
@@ -56,37 +60,35 @@ class SurveyController extends SurveyBaseController {
         ctx.response.status = 200;
         ctx.response.body = survey;
       }
-
     } catch (error) {
       ctx.response.status = 500;
       ctx.response.body = {
-        message: error.message
+        message: error.message,
       };
     }
   }
 
   public async delete(ctx: RouterContext) {
     try {
-        const id = ctx.params.id!;
-        const survey = await this.findSurveyOrFail(id, ctx);
-        if (!survey) {
-          ctx.response.status = 400;
-          ctx.response.body = {
-            message: 'Survey not found'
-          };
-          return;
-        }
-
-        await survey.delete();
-        ctx.response.status = 204;
+      const id = ctx.params.id!;
+      const survey = await this.findSurveyOrFail(id, ctx);
+      if (!survey) {
+        ctx.response.status = 400;
         ctx.response.body = {
-          message: 'Deleted'
+          message: "Survey not found",
         };
+        return;
+      }
 
+      await survey.delete();
+      ctx.response.status = 204;
+      ctx.response.body = {
+        message: "Deleted",
+      };
     } catch (error) {
       ctx.response.status = 500;
       ctx.response.body = {
-        message: error.message
+        message: error.message,
       };
     }
   }

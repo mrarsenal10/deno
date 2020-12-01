@@ -7,14 +7,11 @@ app.use(router.routes());
 app.use(router.allowedMethods());
 
 app.addEventListener("listen", ({ hostname, port, secure }) => {
-  console.log(
-    `${hostname}:${port}`,
-  );
+  console.log(`${hostname}:${port}`);
 });
 
-app.addEventListener("error", e => {
+app.addEventListener("error", (e) => {
   console.log(e.error);
 });
-
 
 await app.listen({ port: 8000 });
